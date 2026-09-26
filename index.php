@@ -29,7 +29,7 @@ $container = velocitytheme_option('justg_container_type', 'container');
             <main class="site-main col order-2" id="main">
 
                 <div class="card mb-3 bg-gray color-theme border py-2 px-3 fs-6 fw-bold">
-                    <?php echo get_option('blogname') . ' - ' . get_option('blogdescription'); ?>
+                    <?php echo esc_html(trim(get_option('blogname') . ' - ' . get_option('blogdescription'), ' -')); ?>
                 </div>
 
                 <?php
