@@ -141,3 +141,34 @@
     background-color: var(--velocitytoko-color-main);
     border-color: var(--velocitytoko-color-main);
 }
+
+/* Arsip produk: daftar kategori (pindah kategori) + tombol filter tidak keluar kotak. */
+.toko14-kategori-filter .list-group-item {
+    padding: .45rem .5rem;
+    border-color: #eee;
+}
+.toko14-kategori-filter .list-group-item.active {
+    color: #fff;
+    background-color: var(--velocitytoko-color-main);
+    border-color: var(--velocitytoko-color-main);
+}
+.toko14-kategori-filter .badge {
+    color: inherit;
+    background-color: rgba(0, 0, 0, .08);
+    font-weight: 500;
+}
+#right-sidebar form.wps-card .wps-mt-4.wps-flex {
+    flex-wrap: wrap !important;
+    gap: .5rem;
+}
+#right-sidebar form.wps-card .wps-mt-4.wps-flex > .wps-btn {
+    flex: 1 1 0 !important;
+    min-width: 0;
+    justify-content: center;
+    padding-left: .5rem !important;
+    padding-right: .5rem !important;
+    margin: 0 !important;
+}
+#right-sidebar form.wps-card .wps-btn svg {
+    flex-shrink: 0;
+}

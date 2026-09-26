@@ -29,6 +29,9 @@ Shortcode untuk widget Teks (susunan demo, dibaca installer lewat `velocity_tema
 - Footer: tanpa widget (hanya hak cipta)
 
 ### Halaman
+Arsip produk (`/produk/`, kategori, merek, pencarian produk): kolom kiri berisi daftar kategori untuk
+berpindah kategori (yang aktif ditandai) + Filter & Urutkan VD Store; sidebar kanan disembunyikan supaya
+kartu produk lebar.
 Template **Velocity Toko Pricelist** (`page-pricelist.php`): tabel semua produk + tombol Cetak.
 Halaman Katalog & Profil Saya VD Store (`page_catalog`/`page_profile`, `[wp_store_catalog]`/`[wp_store_profile]`) selalu tanpa sidebar.
 

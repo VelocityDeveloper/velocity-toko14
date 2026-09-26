@@ -82,6 +82,52 @@ function velocity_toko14_halaman_penuh()
         || strpos((string) get_page_template_slug(), 'katalog') !== false;
 }
 
+/**
+ * Arsip produk VD Store (/produk/, kategori, merek, pencarian produk): kolom kiri berisi daftar kategori +
+ * Filter & Urutkan, sidebar kanan disembunyikan supaya kartu produk tidak sempit.
+ */
+function velocity_toko14_halaman_arsip_produk()
+{
+    return is_post_type_archive('store_product') || is_tax(['store_product_cat', 'brand'])
+        || (is_search() && get_query_var('post_type') === 'store_product');
+}
+
+/**
+ * Daftar kategori produk untuk berpindah kategori di halaman arsip; kategori aktif ditandai.
+ */
+function velocity_toko14_kategori_filter()
+{
+    $kat = get_terms(['taxonomy' => 'store_product_cat', 'hide_empty' => false, 'orderby' => 'name']);
+    if (is_wp_error($kat) || !$kat) {
+        return '';
+    }
+    $aktif = is_tax('store_product_cat') ? (int) get_queried_object_id() : 0;
+    $induk_aktif = $aktif ? array_merge([$aktif], get_ancestors($aktif, 'store_product_cat')) : [];
+    $anak = [];
+    foreach ($kat as $k) {
+        $anak[(int) $k->parent][] = $k;
+    }
+    $item = function ($k, $tingkat) use (&$item, $anak, $aktif, $induk_aktif) {
+        $kelas = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center' . ($tingkat ? ' ps-4' : '')
+            . ((int) $k->term_id === $aktif ? ' active' : '');
+        $html = '<a class="' . $kelas . '" href="' . esc_url(get_term_link($k)) . '"' . ((int) $k->term_id === $aktif ? ' aria-current="page"' : '') . '>'
+            . esc_html($k->name) . '<span class="badge rounded-pill">' . (int) $k->count . '</span></a>';
+        if (!empty($anak[$k->term_id]) && in_array((int) $k->term_id, $induk_aktif, true)) {
+            foreach ($anak[$k->term_id] as $sub) {
+                $html .= $item($sub, $tingkat + 1);
+            }
+        }
+        return $html;
+    };
+    $semua = is_post_type_archive('store_product') && !$aktif;
+    $html = '<div class="toko14-kategori-filter wps-card wps-p-4"><div class="wps-text-lg wps-font-medium wps-mb-3 wps-text-bold">Kategori</div><div class="list-group list-group-flush">'
+        . '<a class="list-group-item list-group-item-action' . ($semua ? ' active' : '') . '" href="' . esc_url(get_post_type_archive_link('store_product')) . '"' . ($semua ? ' aria-current="page"' : '') . '>Semua Produk</a>';
+    foreach ($anak[0] ?? [] as $k) {
+        $html .= $item($k, 0);
+    }
+    return $html . '</div></div>';
+}
+
 if (!function_exists('justg_right_sidebar_check')) {
     /**
      * Right sidebar check
@@ -95,8 +141,9 @@ if (!function_exists('justg_right_sidebar_check')) {
         if (!is_active_sidebar('main-sidebar')) {
             return;
         }
-        if (is_tax(array('store_product_cat', 'brand'))) {
+        if (velocity_toko14_halaman_arsip_produk()) {
             echo '<div class="right-sidebar widget-area pe-md-2 col-sm-12 col-md-3 order-md-1 order-3 px-1" id="right-sidebar" role="complementary">';
+            echo '<aside class="mb-3">' . velocity_toko14_kategori_filter() . '</aside>';
             echo '<aside class="mb-3 d-none d-md-block">';
             echo do_shortcode('[wp_store_filters]');
             echo '</aside>';
@@ -122,7 +169,7 @@ if (!function_exists('justg_left_sidebar_check')) {
      */
     function justg_left_sidebar_check()
     {
-        if (is_singular('fl-builder-template') || velocity_toko14_halaman_penuh()) {
+        if (is_singular('fl-builder-template') || velocity_toko14_halaman_penuh() || velocity_toko14_halaman_arsip_produk()) {
             return;
         }
         if (!is_active_sidebar('secondary-sidebar')) {
