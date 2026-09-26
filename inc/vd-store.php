@@ -88,7 +88,7 @@ function velocity_toko14_harga($id = 0)
 function velocity_toko14_grid_produk($query = null)
 {
     $query = $query ?: $GLOBALS['wp_query'];
-    echo '<div class="row m-0">';
+    echo '<div class="row g-2">';
     while ($query->have_posts()) {
         $query->the_post();
         velocity_toko14_kartu_produk();
