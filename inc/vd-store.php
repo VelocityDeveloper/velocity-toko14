@@ -211,7 +211,7 @@ function velocity_toko14_beli_lain()
 /**
  * Produk lain dari kategori yang sama.
  */
-function velocity_toko14_produk_terkait($jumlah = 4)
+function velocity_toko14_produk_terkait($jumlah = 3)
 {
     $kategori = wp_get_post_terms(get_the_ID(), 'store_product_cat', ['fields' => 'ids']);
     $args = [
